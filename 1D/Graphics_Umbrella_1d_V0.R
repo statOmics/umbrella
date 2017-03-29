@@ -1,4 +1,4 @@
-PlotPartClass1d <- function(PartClass1dobject,platename,res=120){
+PlotUmbrella1d <- function(Umbrella1dObject,platename,res=120){
 	
 	pal0 <- colorRampPalette(c("red","blue"))(76)
 
@@ -39,18 +39,18 @@ PlotPartClass1d <- function(PartClass1dobject,platename,res=120){
 	dev.off()
 	}
 
-xmin <- min(sapply(PartClass1dobject,function(x){min(x$data,na.rm=T)}),na.rm=T)
-xmax <- max(sapply(PartClass1dobject,function(x){max(x$data,na.rm=T)}),na.rm=T)
+xmin <- min(sapply(Umbrella1dObject,function(x){min(x$data,na.rm=T)}),na.rm=T)
+xmax <- max(sapply(Umbrella1dObject,function(x){max(x$data,na.rm=T)}),na.rm=T)
 xdiff <- xmax-xmin
 xmin <- xmin-xdiff/100
 xmax <- xmax+xdiff/100
 textloc <- xmin+xdiff*0.75
 
-lapply(PartClass1dobject,plotfunc)
+lapply(Umbrella1dObject,plotfunc)
 
 # plot all together - pifits
 	filename0 <- paste(platename,"_","pi0fits",".png",sep="")
-	nwell <- length(PartClass1dobject)
+	nwell <- length(Umbrella1dObject)
 	png(filename0,width=900*res/120,height=900*nwell*res/120,res=res)
 	par(mfrow=c(nwell,1))
 	par(mar=c(4.5,4.5,4.5,1))
@@ -63,6 +63,6 @@ lapply(PartClass1dobject,plotfunc)
 		try(lines(seq(-1,0,0.1),rep(wellres$fits$pi[m],11),lwd=1,col="red"))
 		}
 	}
-	lapply(PartClass1dobject,pifitting)
+	lapply(Umbrella1dObject,pifitting)
 	dev.off()
 }

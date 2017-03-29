@@ -1,4 +1,4 @@
-PartClass1d <- function(datalist,vol=0.85,NTC=NULL){
+Umbrella1d <- function(datalist,vol=0.85,NTC=NULL){
 	# datalist must be a list of data: dataframes or vectors.
 	# 	Each dataframe has 1 channel of fluorescence intensities
 	# vol is the volume of one droplet / partition in nL (0.89 for Bio-Rad's QX-100)

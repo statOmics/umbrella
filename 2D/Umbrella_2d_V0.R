@@ -1,4 +1,4 @@
-PartClass2d <- function(datalist,vol=0.85,NTC=NULL,Plate=T,Rotate=F){
+Umbrella2d <- function(datalist,vol=0.85,NTC=NULL,Plate=T,Rotate=F){
 	# datalist must be a list of dataframes.
 	# 	Each dataframe (or matrix) should have as first 2 columns fluorescence intensities of 2 channels
 	# 	an optional column with prior cluster identification named "Cluster" may be added

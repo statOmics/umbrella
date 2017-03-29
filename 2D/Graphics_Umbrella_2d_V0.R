@@ -1,4 +1,4 @@
-PlotPartClass2d <- function(PartClass2dobject,platename,res=120){
+PlotUmbrella2d <- function(Umbrella2dObject,platename,res=120){
 	
 	pal0 <- colorRampPalette(c("blue","red"))(76)
 	pal1 <- colorRampPalette(c("black","gray"))(76)
@@ -96,10 +96,10 @@ PlotPartClass2d <- function(PartClass2dobject,platename,res=120){
 	}
 
 
-xmin <- min(sapply(PartClass2dobject,function(x){min(x$data[,1],na.rm=T)}),na.rm=T)
-xmax <- max(sapply(PartClass2dobject,function(x){max(x$data[,1],na.rm=T)}),na.rm=T)
-ymin <- min(sapply(PartClass2dobject,function(x){min(x$data[,2],na.rm=T)}),na.rm=T)
-ymax <- max(sapply(PartClass2dobject,function(x){max(x$data[,2],na.rm=T)}),na.rm=T)
+xmin <- min(sapply(Umbrella2dObject,function(x){min(x$data[,1],na.rm=T)}),na.rm=T)
+xmax <- max(sapply(Umbrella2dObject,function(x){max(x$data[,1],na.rm=T)}),na.rm=T)
+ymin <- min(sapply(Umbrella2dObject,function(x){min(x$data[,2],na.rm=T)}),na.rm=T)
+ymax <- max(sapply(Umbrella2dObject,function(x){max(x$data[,2],na.rm=T)}),na.rm=T)
 xdiff <- xmax-xmin
 ydiff <- ymax-ymin
 xmin <- xmin-xdiff/100
@@ -109,11 +109,11 @@ ymax <- ymax+ydiff/100
 textlocx <- xmin+xdiff*0.75
 textlocy <- ymin+ydiff*0.75
 
-lapply(PartClass2dobject,plotfunc)
+lapply(Umbrella2dObject,plotfunc)
 
 # plot all together - pifits
 	filename0 <- paste(platename,"_","pi0fits",".png",sep="")
-	nwell <- length(PartClass2dobject)
+	nwell <- length(Umbrella2dObject)
 	png(filename0,width=1800*res/120,height=900*nwell*res/120,res=res)
 	par(mfrow=c(nwell,2))
 	par(mar=c(4.5,4.5,4.5,1))
@@ -133,7 +133,7 @@ lapply(PartClass2dobject,plotfunc)
 		try(lines(seq(-1,0,0.1),rep(log(wellres$fits$pi[m,2]),11),lwd=1,col="red"))
 		}
 	}
-	lapply(PartClass2dobject,pifitting)
+	lapply(Umbrella2dObject,pifitting)
 	dev.off()
 }
 
