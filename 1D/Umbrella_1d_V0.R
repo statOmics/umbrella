@@ -1,7 +1,7 @@
 Umbrella1d <- function(datalist,vol=0.85,NTC=NULL){
 	# datalist must be a list of data: dataframes or vectors.
 	# 	Each dataframe has 1 channel of fluorescence intensities
-	# vol is the volume of one droplet / partition in nL (0.89 for Bio-Rad's QX-100)
+	# vol is the volume of one droplet / partition in nL (0.85 for Bio-Rad's QX-100)
 	# NTC is a vector of names indicating which elements from datalist are NTC's
 	# 	The names in NTC must match the names of items in the datalist.
 require(MASS)
@@ -371,10 +371,10 @@ cat("\n")
 cat(ndrop,"partitions\n")
 cat("Robust estimator:\n")
 cat("  ",round(ndrop*conc[1,1]),"positive, p =",round(conc[1,1],4),"( CI: [",round(conc[3,1],4),",",round(conc[4,1],4),"] )\n")
-cat("  ",round(conc[1,2],1),"copies/ml ( CI: [",round(conc[3,2],1),",",round(conc[4,2],1),"] )\n")
+cat("  ",round(conc[1,2],1),"copies/mul ( CI: [",round(conc[3,2],1),",",round(conc[4,2],1),"] )\n")
 cat("Threshold estimator:\n")
 cat("  ",round(ndrop*conc[1,3]),"positive, p =",round(conc[1,3],4),"( CI: [",round(conc[3,3],4),",",round(conc[4,3],4),"] )\n")
-cat("  ",round(conc[1,4],1),"copies/ml ( CI: [",round(conc[3,4],1),",",round(conc[4,4],1),"] )\n")
+cat("  ",round(conc[1,4],1),"copies/mul ( CI: [",round(conc[3,4],1),",",round(conc[4,4],1),"] )\n")
 cat("CI's for concentration include Poisson variability.\n")
 cat("__________________________________________________\n")
 
