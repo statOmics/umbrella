@@ -34,7 +34,7 @@ PlotUmbrella2d <- function(Umbrella2dObject,platename,res=120){
 		text(textlocx,0.5,paste(wellres$tresh$x[3,4],"rain droplets ([",wellres$tresh$x[3,5],",",wellres$tresh$x[3,6],"])"),cex=res/60)
 	par(mar=c(0,5.5,3,1))
 		xhist <- hist(wellres$data[,1],breaks=seq(xmin,xmax,xdiff/102),plot=F)
-		barplot(xhist$intensities,space=0,horiz=F,axes = FALSE,col="purple",xaxs="i",main=paste(platename,name,"results Channel 1"),cex.main=res/40)
+		barplot(xhist$density,space=0,horiz=F,axes = FALSE,col="purple",xaxs="i",main=paste(platename,name,"results Channel 1"),cex.main=res/40)
 	par(mar=c(5,5.5,0,1))
 		# plot y, colours y
 		plot(wellres$data[,2],wellres$droppi[,2],pch=".",main="",xlab="fluorescence intensity",ylab=expression(hat(p)[i0](x)),xaxs="i",ylim=c(0,1),xlim=c(ymin,ymax),cex.axis=res/60,cex.lab=res/60)
@@ -51,7 +51,7 @@ PlotUmbrella2d <- function(Umbrella2dObject,platename,res=120){
 		text(textlocy,0.5,paste(wellres$tresh$y[3,4],"rain droplets ([",wellres$tresh$y[3,5],",",wellres$tresh$y[3,6],"])"),cex=res/60)
 	par(mar=c(0,5.5,3,1))
 		yhist <- hist(wellres$data[,2],breaks=seq(ymin,ymax,ydiff/102),plot=F)
-		barplot(yhist$intensities,space=0,horiz=F,axes = FALSE,col="purple",xaxs="i",main=paste(platename,name,"results Channel 2"),cex.main=res/40)
+		barplot(yhist$density,space=0,horiz=F,axes = FALSE,col="purple",xaxs="i",main=paste(platename,name,"results Channel 2"),cex.main=res/40)
 	dev.off()
 
 	# plot 2 - 2D information
