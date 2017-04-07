@@ -1,7 +1,7 @@
 Umbrella1d <- function(datalist,vol=0.85,NTC=NULL){
 	# datalist must be a list of data: dataframes or vectors.
 	# 	Each dataframe has 1 channel of fluorescence intensities
-	# vol is the volume of one droplet / partition in nL (0.85 for Bio-Rad's QX-100)
+	# vol is the volume of one partition in nL (0.85 for Bio-Rad's QX-100)
 	# NTC is a vector of names indicating which elements from datalist are NTC's
 	# 	The names in NTC must match the names of items in the datalist.
 require(MASS)

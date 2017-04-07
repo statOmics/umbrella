@@ -2,15 +2,16 @@ Umbrella2d <- function(datalist,vol=0.85,NTC=NULL,Plate=T,Rotate=F){
 	# datalist must be a list of dataframes.
 	# 	Each dataframe (or matrix) should have as first 2 columns fluorescence intensities of 2 channels
 	# 	an optional column with prior cluster identification named "Cluster" may be added
-	# vol is the volume of one droplet / partition in nL (0.89 for Bio-Rad's QX-100)
+	# vol is the volume of one partition in nL (0.89 for Bio-Rad's QX-100)
 	# NTC is a vector of names indicating which elements from datalist are NTC's
 	# 	The names in NTC must match the names of items in the datalist.
 	# Plate: if true, all plate information may be used to calculate cluster centres (default)
-	# 	if false, only cluster information (if given) and well data are used.
+	# 	if false, only cluster information (if given) and partition set data are used.
 	# Rotate: if false, no data rotation is performed. (default)
-	#	if true, data gets rotated based on a default, well-based algorithm.
+	#	if true, data gets rotated based on a default, partition set-based algorithm.
 	#	if "Plate", data gets rotated based on data from complete plate
-	# 	if a name of a well is given, all wells are rotated based on data from this well.
+	# 	if a name of (a) partition set(s) is (are) given, all partition sets
+  #   are rotated based on data from this (these) reference(s).
 
 require(MASS)
 require(mgcv)

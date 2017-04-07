@@ -1,5 +1,8 @@
 PlotUmbrella2d <- function(Umbrella2dObject,platename,res=120){
-	
+  # Umbrella2dObject is output from the Umbrella procedure
+  # platename is a name for the experiment that will be used
+  #   in the name of the generated files.
+  # res is the resolution, in dpi.
 	pal0 <- colorRampPalette(c("blue","red"))(76)
 	pal1 <- colorRampPalette(c("black","gray"))(76)
 

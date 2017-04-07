@@ -1,5 +1,8 @@
 PlotUmbrella1d <- function(Umbrella1dObject,platename,res=120){
-	
+	# Umbrella1dObject is output from the Umbrella procedure
+  # platename is a name for the experiment that will be used
+  #   in the name of the generated files.
+  # res is the resolution, in dpi.
 	pal0 <- colorRampPalette(c("red","blue"))(76)
 
 	plotfunc <- function(wellres){
