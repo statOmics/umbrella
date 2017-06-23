@@ -1,0 +1,299 @@
+---
+title: "Umbrella Tutorial 1D"
+author: "Bart K. M. Jacobs"
+date: "5 april 2017"
+output: pdf_document
+---
+========================================================
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This tutorial explains how to run Umbrella when single-channel data are available in an RData file in the correct format.
+
+To create an RData file from .csv files, please consult `Tutorial_DataCreation`.
+
+To analyse multi-channel data, please consult `Tutorial_Umbrella_2D`.
+
+
+# Introduction to R
+
+First, load the RData file ```Tutorial_1D.RData```.
+You can do this through File -> Load Workspace in Base R,
+or File -> Open File... in RStudio.
+Alternatively, execute the following command after changing the path accordingly
+
+```{r loading data}
+load("C:\\temp\\Tutorial_1D.RData")
+```
+
+With the `ls()` command, you can see all objects currently loaded.  
+In RStudio, such list can also be consulted in the Global Environment,
+in the upper right panel.
+
+```{r overview}
+ls()
+```
+This file contains three objects:
+
+* "Tutorial.Plate.1D", a simulated example dataset
+* "Umbrella1d", the Umbrella function for single-channel data
+* "PlotUmbrella1d", a routine to create graphics
+
+You can check the structure of an R object with `str()` and `attributes()`
+
+```{r data structure}
+str(Tutorial.Plate.1D)
+```
+
+Input data for Umbrella needs to be structured as a list with a single, named entry for each partition set.
+
+Let's make histograms of the data:
+```{r histograms of data, fig.width=10, fig.height=6}
+par(mfrow=c(2,3))
+for(i in 1:6){
+hist(Tutorial.Plate.1D[[i]],xlab="fluorescence intensity",
+  main=paste("histogram of",names(Tutorial.Plate.1D)[i]))
+}
+par(mfrow=c(1,1))
+```
+
+We see that the clusters are nicely separated in Target 1, while Target2 and Target3 show increasing rain.
+
+
+# Running Umbrella
+
+In general, you want to open the ```Umbrella_1D.R``` file and run all the code in it.  Note that this file will have a version number which can change as the software gets updated: e.g. ```Umbrella_1d_V0.R```
+
+For this tutorial, the functions have already been included in the Rdata file.
+
+Umbrella requires 5 other packages to be loaded, these are:
+MASS, mgcv, robust, modeest, OrdMonReg
+
+Please intall them before running the procedure.
+This can be done through Packages -> Install Package(s)... in Base R
+or with Tools -> Install Packages... in RStudio.
+In most installations, running the following code will work as well:
+```
+install.packages(c("MASS","mgcv","robust","modeest","OrdMonReg"))
+```
+
+Run Umbrella on the tutorial data set with the following code:
+
+
+```{r load packages,include=FALSE}
+library("MASS")
+library("mgcv")
+library("robust")
+library("modeest")
+library("OrdMonReg")
+```
+```{r Run Umbrella}
+ResTut <- Umbrella1d(Tutorial.Plate.1D,NTC=c("NTC1","NTC2","NTC3"))
+```
+Only the first argument is needed.  This should be a list of partition sets with single channel fluorescence intensities.
+
+Currently, there are two optional arguments:
+
+* vol= for the volume in nanoliter, default value 0.85 for Bio-Rad's QX100.
+* NTC= for a vector with names of the NTCs.  
+
+In this example, we keep the default value for the volume and supply three NTCs with names NTC1, NTC2, NTC3.   
+Note: Umbrella can run without NTCs, but underlying distributional assumptions are likely violated in this case!  Please do provide NTCs.
+
+Extensive output is stored in the "ResTut" object.
+The name of the result object can be freely chosen.
+
+While the procedure is running, some output is already shown in the R console.  This includes:
+
+* During the first run: messages about all packages that are loaded.
+* The steps when they are concluded.
+* Per partition set:
+
+ + The time to complete the estimation step.
+ + The number of partitions
+ + The number of positives and the concentration for both the overall Umbrella estimator and a probabilistic threshold estimator
+ + A confidence interval for this number and the concentration
+
+A new object, in this case named "ResTut" is created.  
+The structure of this object can be summarized with `str()`.
+The object is a list with a separate entry for each partition set.
+The structure is the same over all partition sets.
+In what follows, we'll look at the details for Target3.
+
+```{r structure of an Umbrella object}
+str(ResTut$Target3,max.level=1)
+```
+
+For each partition set, a list of 11 pieces of information is created.  In what follows, we'll go through all of them, although most likely you will only want to use the first few.
+
+01. $ conc
+
+```{r output$conc}
+ResTut$Target3$conc
+```
+
+These are the estimates of (i) the probability to be positive and (ii) the concentration of the sample (in copies/microliter) for both Umbrella estimators (overall and probability threshold). (first line)
+Additionally, their standard deviation (second line) and confidence intervals are added (third and fourth line).  
+Note: proper standard deviations and confidence intervals can only be calculated when multiple NTCs are provided
+
+02. $ thres
+
+```{r output$thres}
+ResTut$Target3$tresh
+```
+
+These are the proportion (probability) of partitions that are positive (pos), negative (neg) or rain (rain) with a confidence interval on each, as well as the associated absolute numbers.  
+Proportions are calculated as absolute numbers divided by the total number of partitions.
+
+03. $ fits
+
+```{r output$fits}
+ResTut$Target3$fits
+```
+
+Estimates used for the mode (mu),  robust deviation (sig)
+and the probability that a random target partition is negative (pi).
+These estimates are recalculated for each combination with a different NTC.  I.e.: the first number refers to the estimate calculated and used in the joint model with Target3 and NTC1, the second number is the estimate from the model with Target3 and NTC2, and so on.
+
+04. $ data
+
+```{r output$data, fig.width=7, fig.height=5}
+hist(ResTut$Target3$data)
+```
+
+The original data
+
+05. $ droppi
+
+```{r output$droppi, fig.width=7, fig.height=5}
+hist(ResTut$Target3$droppi)
+```
+
+The estimates for the individual partition probabilities
+
+06. $ dropci
+
+```{r}
+str(ResTut$Target3$dropci)
+```
+
+Confidence intervals for the individual droplet probabilities
+
+07. $ reppi
+
+```{r output$reppi}
+str(ResTut$Target3$reppi)
+```
+
+The original partition probabilities per NTC before antitonic regression and averaging over NTCs.  Mainly used for quality control (QC).
+
+08. $ densfits
+
+```{r output$densfits}
+str(ResTut$Target3$densfits)
+```
+
+The fitted density of the target when jointly modelled with each NTC.
+
+09. $ ntcfits
+
+```{r output$ntcfits}
+str(ResTut$Target3$ntcfits)
+```
+
+The fitted density of each NTC when jointly modelled with the target.
+
+10. $ pifits
+
+```{r output$pifits}
+str(ResTut$Target3$pifits)
+```
+
+Ratio between target and NTC around the mode.
+Can be used for QC.
+
+11. $ name
+
+Name of the partition set, mainly used for internal automatic calling and matching and when displaying the results.
+
+
+# Summarizing Output 
+
+### Automatic Figures
+We created a file to provide some useful figures automatically.
+To use this, you generally want to open ```Graphics_Umbrella_1d.R``` and execute all the code.  For this tutorial, we included the function in the already loaded RData file.
+
+Change the path below to the folder where you want figures to appear and then run the code.
+
+```{r set directory,eval=F}
+setwd("C:/temp")
+```
+
+Run the code below to generate and save some graphics directly onto your hard disk.
+
+```{r Run PlotUmbrella}
+PlotUmbrella1d(ResTut,"Tutorial1D")
+```
+
+The command has three arguments of which two are required.
+
+ * The name of an object created by the Umbrella1d procedure (here: ResTut)
+ * A name for the files that can be freely chosen (here: Tutorial1D)  
+ * Optionally, the resolution can be chosen with the `res=` command (default 120 dpi)
+
+A plot similar to the middle panel of Figure 2 of our manuscript will be created for each partition set.  Important numeric output is added to this plot.  
+A single QC figure is added as well.
+
+As an example, for Target3, Figure 1, below, is generated.
+
+![Output of PlotUmbrella1d](Tutorial1D_Target3_full_results.png)
+
+Using the R object (ResTut here), it is possible to create custom output.
+We give a few handy examples similar to figures in the manuscript.
+
+### Table with concentration estimates
+
+Creating a table with concentration estimates for the complete plate / experiment can be done with the following code:
+
+```{r Main Umbrella concentration estimates}
+conrob <- t(sapply(ResTut,function(x){x$conc[c(1,3,4),2]}))
+conrob
+```
+The table above displays the results of the main Umbrella estimator.
+
+
+```{r Threshold Umbrella concentration estimates}
+conptr <- t(sapply(ResTut,function(x){x$conc[c(1,3,4),4]}))
+conptr
+```
+This table shows the results of the probability threshold estimator.
+
+We can now save these together in a handy comma separated value file,
+which can be opened by most data processing programs, but also in Excel, Notepad, etc.
+```{r Save concentration estimates}
+concdat <- t(sapply(ResTut,function(x){x$conc[c(1,3,4),c(2,4)]}))
+colnames(concdat) <- c("est_main","CI_LB_main","CI_UB_main","est_thres","CI_LB_thres","CI_UB_thres")
+write.csv(concdat,file="Tutorial_Concentrations.csv")
+```
+
+
+### Plotting the concentrations
+This creates output similar to Figure 3 in the manuscript.
+
+```{r Concentrations plotted, fig.width=8, fig.height=5}
+ymaxs <- max(conrob[conrob<Inf],conptr[conrob<Inf])
+npset <- nrow(conrob)
+par(mar=c(1,4,1,1))
+plot(NULL,ylim=c(0,ymaxs),xlim=c(0,npset+1),
+	main="",xlab="",xaxt="n",
+	ylab=expression(paste("concentration (cp/",mu,"l)",sep="")))
+for(i in 1:npset){
+lines(c(i-0.1,i-0.1),c(conrob[i,2],conrob[i,3]))
+lines(c(i+0.1,i+0.1),c(conptr[i,2],conptr[i,3]))
+points(i-0.1,conrob[i,1],col="blue",pch=16)
+points(i+0.1,conptr[i,1],col="green",pch=16)
+}
+```
+
