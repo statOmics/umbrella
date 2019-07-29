@@ -24,14 +24,14 @@ require(OrdMonReg)
 
 modeRet=function(x,NTC=FALSE,prob=1e-3,method="asselin")
 {
-if (NTC) return(mlv(x,method=method)$M) 
+if (NTC) return(mlv(x,method=method)) 
 #mvl implements several methods to find the mode of a univariate unimodal distribution (and thus the most abundant mode of a univariate multimodale distributie)
 
 else 
 {
 #use cut point to find two modi
 cut=mean(quantile(x,c(prob,1-prob)))
-hlp=c(mlv(x,method=method)$M,mlv(x[x<cut],method=method)$M,mlv(x[x>cut],method=method)$M,NA)
+hlp=c(mlv(x,method=method),mlv(x[x<cut],method=method),mlv(x[x>cut],method=method),NA)
 #minimal mode is null mode
 if (hlp[1]/mean(hlp[1:3])>1.1) hlp[4]=min(hlp[1:3]) else hlp[4]=hlp[1]
 return(list(mode=hlp[4],name=NULL))
