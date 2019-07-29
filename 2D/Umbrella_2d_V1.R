@@ -41,9 +41,9 @@ data3 <- data[data$Cluster==nullclus[3],]
 clusn <- c(nrow(data1),nrow(data2),nrow(data3))/nrow(data)
 	# percentage in each cluster
 hlp <- rep(NA,6)
-if(clusn[1]>0){hlp[1:2] <- c(mlv(data1[,1],method="asselin")$M,mlv(data1[,2],method="asselin")$M)}
-if(clusn[2]>0){hlp[3:4] <- c(mlv(data2[,1],method="asselin")$M,mlv(data2[,2],method="asselin")$M)}
-if(clusn[3]>0){hlp[5:6] <- c(mlv(data3[,1],method="asselin")$M,mlv(data3[,2],method="asselin")$M)}
+if(clusn[1]>0){hlp[1:2] <- c(mlv(data1[,1],method="asselin"),mlv(data1[,2],method="asselin"))}
+if(clusn[2]>0){hlp[3:4] <- c(mlv(data2[,1],method="asselin"),mlv(data2[,2],method="asselin"))}
+if(clusn[3]>0){hlp[5:6] <- c(mlv(data3[,1],method="asselin"),mlv(data3[,2],method="asselin"))}
 names(hlp)=c("xMode00","yMode00","xMode10","yMode10","xMode01","yMode01")
 	# identify each of the modes
 
@@ -58,9 +58,9 @@ data3w <- data[data[,1]<cutx & data[,2]>=cuty,]
 clusnw <- c(nrow(data1w),nrow(data2w),nrow(data3w))/nrow(data)
 	# percentage in each cluster
 hlp2 <- rep(NA,6)
-if(clusnw[1]>0){hlp2[1:2] <- c(mlv(data1w[,1],method="asselin")$M,mlv(data1w[,2],method="asselin")$M)}
-if(clusnw[2]>0){hlp2[3:4] <- c(mlv(data2w[,1],method="asselin")$M,mlv(data2w[,2],method="asselin")$M)}
-if(clusnw[3]>0){hlp2[5:6] <- c(mlv(data3w[,1],method="asselin")$M,mlv(data3w[,2],method="asselin")$M)}
+if(clusnw[1]>0){hlp2[1:2] <- c(mlv(data1w[,1],method="asselin"),mlv(data1w[,2],method="asselin"))}
+if(clusnw[2]>0){hlp2[3:4] <- c(mlv(data2w[,1],method="asselin"),mlv(data2w[,2],method="asselin"))}
+if(clusnw[3]>0){hlp2[5:6] <- c(mlv(data3w[,1],method="asselin"),mlv(data3w[,2],method="asselin"))}
 names(hlp2)=c("xMode00","yMode00","xMode10","yMode10","xMode01","yMode01")
 
 hlp[is.na(hlp)] <- hlp2[is.na(hlp)]
@@ -1315,8 +1315,8 @@ if(!is.null(NTC)){
 		if(any(names(modout)==NTC[i])){
 			modout[[which(names(modout)==NTC[i])]]$diffc <- F
 			modout[[which(names(modout)==NTC[i])]]$center[3:6] <- NA
-			NTCxcent <- mlv(datalist[[which(names(datalist)==NTC[i])]][,1],method="asselin")$M
-			NTCycent <- mlv(datalist[[which(names(datalist)==NTC[i])]][,2],method="asselin")$M
+			NTCxcent <- mlv(datalist[[which(names(datalist)==NTC[i])]][,1],method="asselin")
+			NTCycent <- mlv(datalist[[which(names(datalist)==NTC[i])]][,2],method="asselin")
 			modout[[which(names(modout)==NTC[i])]]$center[1:2] <- c(NTCxcent,NTCycent)
 }}}
 
